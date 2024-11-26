@@ -1,0 +1,1154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be Examiner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        .section {
+            padding: 2rem;
+            margin: 0 auto;
+            max-width: 800px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .option {
+            margin: 1rem 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f1f1f1;
+            margin-top: 2rem;
+        }
+        .test-details {
+            background-color: #e7f7e7;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        .timer {
+            position: sticky;
+            top: 0;
+            background-color: #fff3cd;
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #ff0000;
+            z-index: 1000;
+            border-bottom: 2px solid #ffa502;
+        }
+    
+        input[type="radio"] {
+            width: 25px;
+            height: 25px;
+            position: relative;
+            margin-right: 10px;
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .mcq-container div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .mcq-container p {
+            flex: 1;
+            margin-right: 20px;
+        }
+        input[type="radio"] {
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .mcq-container div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        .mcq-container p {
+            flex: 1;
+            margin-right: 30px;
+        }
+        .mcq-container div {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 30px;
+        }
+        .mcq-container p {
+            flex: 0 0 auto;
+            margin-right: 20px;
+        }
+        .mcq-container div {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            margin-bottom: 20px;
+        }
+        .mcq-container p {
+            flex: 1;
+            margin-right: 30px;
+        }
+        input[type="radio"] {
+            margin: 5px 0;
+        }
+        input[type="radio"]::before {
+            content: attr(value);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: #aaa;
+            pointer-events: none;
+        }
+        .mcq-container div {
+            margin-bottom: 20px;
+        }
+    
+        .mcq-container div {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    
+        #configuration-section {
+            margin: 0 auto;
+            padding: 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            background-color: #e7f7e7;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+        }
+        #configuration-section h2 {
+            text-align: center;
+            color: #333;
+        }
+        #test-form .option {
+            margin-bottom: 15px;
+        }
+        #test-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        #test-form input[type="text"],
+        #test-form input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #test-form button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+        }
+        #test-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    
+    
+    
+</head>
+<body>
+    <header>
+        <h1>Be Examiner</h1>
+        <p>Create and manage your OMR-based tests easily!</p>
+    </header>
+    <section id="configuration-section" class="section">
+        <h2>Test Configuration</h2>
+        <form id="test-form">
+            <div class="option">
+                <label for="test-name">Test Name:</label>
+                <input type="text" id="test-name" name="test-name" required>
+            </div>
+            <div class="option">
+                <label for="mcq-number">Number of MCQs:</label>
+                <input type="number" id="mcq-number" name="mcq-number" required>
+            </div>
+            <div class="option">
+                <label for="time-limit">Time Limit (in minutes):</label>
+                <input type="number" id="time-limit" name="time-limit" required>
+            </div>
+            <div class="option">
+                <label for="negative-marking">Enable Negative Marking:</label>
+                <input type="checkbox" id="negative-marking" name="negative-marking">
+            </div>
+            <button type="submit">Start Test</button>
+        </form>
+    </section>
+    <section id="test-section" class="section" style="display:none;">
+
+<div id="floating-summary" style="position: fixed; bottom: 10px; left: 10px; width: 50px; height: 50px; background-color: #4CAF50; border: 2px solid #ffffff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); z-index: 1000; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s;">
+    <p style="text-align: center; font-size: 1rem; color: black; margin: 0; font-weight: bold;">
+        Qs
+    </p>
+</div>
+
+
+<script>
+    let summaryVisible = false;
+
+    // Add hover effect and toggle summary
+    document.addEventListener("DOMContentLoaded", function () {
+        const floatingSummary = document.getElementById("floating-summary");
+        const summaryContent = document.createElement("div");
+        summaryContent.id = "summary-content";
+        summaryContent.style = "position: fixed; bottom: 70px; left: 10px; width: 150px; max-height: 200px; padding: 10px; background-color: #f9f9f9; border: 2px solid #4CAF50; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); overflow-y: auto; display: none; z-index: 1000;";
+        document.body.appendChild(summaryContent);
+
+        floatingSummary.addEventListener("click", function () {
+            summaryVisible = !summaryVisible;
+            summaryContent.style.display = summaryVisible ? "block" : "none";
+            if (summaryVisible) updateSummary(summaryContent);
+        });
+
+        floatingSummary.addEventListener("mouseover", function () {
+            floatingSummary.style.transform = "scale(1.1)";
+        });
+
+        floatingSummary.addEventListener("mouseout", function () {
+            floatingSummary.style.transform = "scale(1)";
+        });
+    });
+
+    function updateSummary(container) {
+        container.innerHTML = ""; // Clear previous content
+        for (let i = 1; i <= mcqNumber; i++) {
+            const isAnswered = document.querySelector(`input[name="q${i}"]:checked`);
+            const color = isAnswered ? "green" : "transparent";
+            const questionBox = `
+                <div style="display: inline-block; width: 25px; height: 25px; margin: 3px; background-color: ${color}; border: 1px solid #ccc; text-align: center; line-height: 25px; cursor: pointer; border-radius: 5px; font-weight: bold;"
+                     onclick="document.getElementById('mcq-${i}').scrollIntoView({behavior: 'smooth'});">
+                    ${i}
+                </div>`;
+            container.innerHTML += questionBox;
+        }
+    }
+
+    // Attach IDs to MCQ elements for navigation
+    document.addEventListener("DOMContentLoaded", function() {
+        for (let i = 1; i <= mcqNumber; i++) {
+            const mcqDiv = document.querySelector(`#mcq-container div:nth-child(${i})`);
+            if (mcqDiv) mcqDiv.setAttribute("id", `mcq-${i}`);
+        }
+    });
+</script>
+
+        <div class="timer" id="timer"></div>
+        <div class="test-details" id="test-details"></div>
+        <div class="mcq-container" id="mcq-container"></div>
+        <button id="submit-test">Submit Test</button>
+    </section>
+    <section id="correct-answer-section" class="section" style="display:none;">
+        <h2>Select Correct Answers</h2>
+        <div id="correct-answer-container"></div>
+<p id="warning-message" style="color: red; display: none;">
+    সবগুলো প্রশ্নের সঠিক উত্তর সিলেক্ট করুন। অন্যথায় সাবমিট করতে পারবেন না।
+</p>
+
+        <button id="submit-correct-answers">Submit Correct Answers</button>
+    </section>
+    <section id="result-section" class="section" style="display:none;">
+        <h2>Test Result</h2>
+        <div id="result-container"></div>
+    </section>
+    <footer>
+        <p>Be Examiner &copy; 2024. All rights reserved.</p>
+    
+<div class="join-us" style="text-align: center; margin: 15px auto; padding: 8px; background-color: #ffa07a; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); max-width: 300px;">
+    <a href="https://t.me/admissionnewscorner" style="font-size: 1rem; color: white; text-decoration: none; font-weight: bold;">
+        Join with us
+    </a>
+</div>
+
+</footer>
+    <script>
+        let mcqNumber = 0;
+        let testName = "";
+        let timeLimit = 0;
+        let negativeMarking = false;
+
+        document.getElementById("test-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            testName = document.getElementById("test-name").value;
+            mcqNumber = parseInt(document.getElementById("mcq-number").value);
+            timeLimit = parseInt(document.getElementById("time-limit").value);
+            negativeMarking = document.getElementById("negative-marking").checked;
+
+            document.getElementById("configuration-section").style.display = "none";
+            document.getElementById("test-section").style.display = "block";
+
+            const testDetails = document.getElementById("test-details");
+            testDetails.innerHTML = `
+                <h3>${testName}</h3>
+                <p>Total Questions: ${mcqNumber}</p>
+                <p>Time Limit: ${timeLimit} minutes</p>
+                <p>Negative Marking: ${negativeMarking ? "Enabled" : "Disabled"}</p>
+            `;
+
+            const timerDisplay = document.getElementById("timer");
+            let timeRemaining = timeLimit * 60;
+            const timer = setInterval(() => {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerDisplay.textContent = `Time Remaining: ${minutes}m ${seconds}s`;
+                timeRemaining--;
+
+                if (timeRemaining < 0) {
+                    clearInterval(timer);
+                    timerDisplay.textContent = "Time's up!";
+                    alert("Time's up! The test will be auto-submitted.");
+                    document.getElementById("submit-test").click();
+                }
+            }, 1000);
+
+            const mcqContainer = document.getElementById("mcq-container");
+            mcqContainer.innerHTML = "";
+            for (let i = 1; i <= mcqNumber; i++) {
+                const mcqDiv = document.createElement("div");
+                mcqDiv.innerHTML = `
+                    <p>Q. ${i}:</p>
+                    <input type="radio" name="q${i}" value="A">
+                    <input type="radio" name="q${i}" value="B">
+                    <input type="radio" name="q${i}" value="C">
+                    <input type="radio" name="q${i}" value="D">
+                `;
+                mcqContainer.appendChild(mcqDiv);
+            }
+        });
+
+        document.getElementById("submit-test").addEventListener("click", function() {
+            document.getElementById("test-section").style.display = "none";
+            document.getElementById("correct-answer-section").style.display = "block";
+
+            const correctAnswerContainer = document.getElementById("correct-answer-container");
+            correctAnswerContainer.innerHTML = "";
+            for (let i = 1; i <= mcqNumber; i++) {
+                const answerDiv = document.createElement("div");
+                answerDiv.innerHTML = `
+                    <p>Correct Answer for Q. ${i}:</p>
+                    <input type="radio" name="correct-q${i}" value="A">
+                    <input type="radio" name="correct-q${i}" value="B">
+                    <input type="radio" name="correct-q${i}" value="C">
+                    <input type="radio" name="correct-q${i}" value="D">
+                `;
+                correctAnswerContainer.appendChild(answerDiv);
+            }
+        });
+
+        document.getElementById("submit-correct-answers").addEventListener("click", function() {
+            document.getElementById("correct-answer-section").style.display = "none";
+            document.getElementById("result-section").style.display = "block";
+
+            const resultContainer = document.getElementById("result-container");
+            let correctCount = 0;
+
+            for (let i = 1; i <= mcqNumber; i++) {
+                const userAnswer = document.querySelector(`input[name="q${i}"]:checked`);
+                const correctAnswer = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (userAnswer && correctAnswer && userAnswer.value === correctAnswer.value) {
+                    correctCount++;
+                }
+            }
+
+            const incorrectCount = mcqNumber - correctCount;
+            resultContainer.innerHTML = `
+                <p>Total Questions: ${mcqNumber}</p>
+                <p>Correct Answers: ${correctCount}</p>
+                <p>Incorrect Answers: ${incorrectCount}</p>
+            `;
+        });
+    </script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+            correctAnswerButton.disabled = !allSelected;
+            correctAnswerButton.style.backgroundColor = allSelected ? "#4CAF50" : "#e0e0e0";
+            warningMessage.style.display = allSelected ? "none" : "block";
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial check to disable the button on page load
+        updateButtonState();
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+            correctAnswerButton.disabled = !allSelected;
+            correctAnswerButton.style.backgroundColor = allSelected ? "#4CAF50" : "#ffffff";
+            correctAnswerButton.style.color = allSelected ? "white" : "#000";
+            warningMessage.style.display = allSelected ? "none" : "block";
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial check to disable the button on page load
+        updateButtonState();
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+            correctAnswerButton.disabled = !allSelected;
+            correctAnswerButton.style.backgroundColor = allSelected ? "#4CAF50" : "#ffffff";
+            correctAnswerButton.style.color = allSelected ? "white" : "#000";
+            warningMessage.style.display = allSelected ? "none" : "block";
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial check to disable the button on page load
+        updateButtonState();
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+            correctAnswerButton.style.display = allSelected ? "block" : "none";
+            warningMessage.style.display = allSelected ? "none" : "block";
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial check to hide the button on page load
+        correctAnswerButton.style.display = "none";
+        warningMessage.style.display = "block";
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Update the warning message text
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+            if (allSelected) {
+                correctAnswerButton.style.display = "block"; // Show the button
+                warningMessage.style.display = "none"; // Hide the warning message
+            } else {
+                correctAnswerButton.style.display = "none"; // Hide the button
+                warningMessage.style.display = "block"; // Show the warning message
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial check to hide the button on page load
+        correctAnswerButton.style.display = "none";
+        warningMessage.style.display = "block";
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Update the warning message text
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+            if (allSelected) {
+                correctAnswerButton.style.display = "block"; // Ensure button is visible
+                warningMessage.style.display = "none"; // Hide warning
+            } else {
+                correctAnswerButton.style.display = "none"; // Ensure button is hidden
+                warningMessage.style.display = "block"; // Show warning
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial state check on page load
+        updateButtonState();
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Set the correct warning message
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+
+            if (allSelected) {
+                correctAnswerButton.style.display = "block"; // Make button visible
+                warningMessage.style.display = "none"; // Hide the warning message
+            } else {
+                correctAnswerButton.style.display = "none"; // Hide button
+                warningMessage.style.display = "block"; // Show warning message
+            }
+        }
+
+        // Attach event listeners to all radio buttons
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial check on page load
+        updateButtonState();
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Update the warning message text
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+
+            if (allSelected) {
+                correctAnswerButton.style.display = "block"; // Make button visible
+                warningMessage.style.display = "none"; // Hide warning message
+            } else {
+                correctAnswerButton.style.display = "none"; // Hide button
+                warningMessage.style.display = "block"; // Show warning message
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial check on page load
+        correctAnswerButton.style.display = "none"; // Ensure button is hidden on load
+        warningMessage.style.display = "block"; // Ensure warning is visible on load
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Update the warning message text
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+
+            if (allSelected) {
+                correctAnswerButton.style.display = "inline-block"; // Ensure button becomes visible
+                warningMessage.style.display = "none"; // Hide the warning message
+            } else {
+                correctAnswerButton.style.display = "none"; // Hide button
+                warningMessage.style.display = "block"; // Show the warning message
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Initial check on page load
+        updateButtonState();
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Set the correct warning message
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all answers are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+
+            if (allSelected) {
+                correctAnswerButton.style.display = "inline-block"; // Show button
+                warningMessage.style.display = "none"; // Hide warning
+            } else {
+                correctAnswerButton.style.display = "none"; // Hide button
+                warningMessage.style.display = "block"; // Show warning
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the correct answer section
+        for (let i = 1; i <= mcqNumber; i++) {
+            const radioButtons = document.querySelectorAll(`input[name="correct-q${i}"]`);
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", updateButtonState);
+            });
+        }
+
+        // Ensure button starts hidden and warning starts visible on page load
+        correctAnswerButton.style.display = "none";
+        warningMessage.style.display = "block";
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Update the warning message text
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all MCQs are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+
+            if (allSelected) {
+                correctAnswerButton.style.display = "inline-block"; // Show button
+                warningMessage.style.display = "none"; // Hide warning message
+            } else {
+                correctAnswerButton.style.display = "none"; // Hide button
+                warningMessage.style.display = "block"; // Show warning message
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the MCQ section
+        document.querySelectorAll("input[type='radio']").forEach((radio) => {
+            radio.addEventListener("change", updateButtonState);
+        });
+
+        // Ensure button starts hidden and warning starts visible on page load
+        correctAnswerButton.style.display = "none";
+        warningMessage.style.display = "block";
+
+        // Perform an initial check on page load
+        updateButtonState();
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Set the correct warning message
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all MCQs are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+
+            // Update button and warning message based on selection
+            if (allSelected) {
+                correctAnswerButton.style.backgroundColor = "#4CAF50"; // Green button
+                correctAnswerButton.style.color = "white";
+                correctAnswerButton.style.pointerEvents = "auto"; // Enable click
+                warningMessage.style.display = "none"; // Hide warning
+            } else {
+                correctAnswerButton.style.backgroundColor = "transparent"; // Transparent button
+                correctAnswerButton.style.color = "#ccc";
+                correctAnswerButton.style.pointerEvents = "none"; // Disable click
+                warningMessage.style.display = "block"; // Show warning
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the MCQ section
+        document.querySelectorAll("input[type='radio']").forEach((radio) => {
+            radio.addEventListener("change", updateButtonState);
+        });
+
+        // Initial check on page load
+        correctAnswerButton.style.backgroundColor = "transparent";
+        correctAnswerButton.style.color = "#ccc";
+        correctAnswerButton.style.pointerEvents = "none"; // Ensure button is initially disabled
+        warningMessage.style.display = "block"; // Ensure warning is initially visible
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Update the warning message text
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all MCQs are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+
+            // Update button style and warning message based on selection
+            if (allSelected) {
+                correctAnswerButton.style.backgroundColor = "#4CAF50"; // Turn green
+                correctAnswerButton.style.color = "white"; // White text
+                correctAnswerButton.style.pointerEvents = "auto"; // Enable clicking
+                warningMessage.style.display = "none"; // Hide warning
+            } else {
+                correctAnswerButton.style.backgroundColor = "transparent"; // Transparent
+                correctAnswerButton.style.color = "#ccc"; // Grey text
+                correctAnswerButton.style.pointerEvents = "none"; // Disable clicking
+                warningMessage.style.display = "block"; // Show warning
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the MCQ section
+        document.querySelectorAll("input[type='radio']").forEach((radio) => {
+            radio.addEventListener("change", updateButtonState);
+        });
+
+        // Initial state on page load
+        correctAnswerButton.style.backgroundColor = "transparent";
+        correctAnswerButton.style.color = "#ccc";
+        correctAnswerButton.style.pointerEvents = "none"; // Button disabled by default
+        warningMessage.style.display = "block"; // Warning message visible by default
+
+        // Perform an initial check
+        updateButtonState();
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctAnswerButton = document.getElementById("submit-correct-answers");
+        const warningMessage = document.getElementById("warning-message");
+
+        // Update the warning message text
+        warningMessage.textContent = "উত্তরপত্র থেকে সঠিক উত্তর গুলো সিলেক্ট করুন, এটা আপনার ফলাফল তৈরিতে কাজে লাগবে। অন্যথায় সাবমিট করতে পারবেন না।";
+
+        // Function to check if all MCQs are selected
+        function updateButtonState() {
+            let allSelected = true;
+            for (let i = 1; i <= mcqNumber; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selected) {
+                    allSelected = false;
+                    break;
+                }
+            }
+
+            // Update button based on selection
+            if (allSelected) {
+                correctAnswerButton.disabled = false; // Enable button
+                correctAnswerButton.style.backgroundColor = "#4CAF50"; // Green button
+                correctAnswerButton.style.color = "white"; // White text
+            } else {
+                correctAnswerButton.disabled = true; // Disable button
+                correctAnswerButton.style.backgroundColor = "#ccc"; // Grey button
+                correctAnswerButton.style.color = "#666"; // Dark grey text
+            }
+        }
+
+        // Attach event listeners to all radio buttons in the MCQ section
+        document.querySelectorAll("input[type='radio']").forEach((radio) => {
+            radio.addEventListener("change", updateButtonState);
+        });
+
+        // Initial state on page load
+        correctAnswerButton.disabled = true; // Button disabled by default
+        correctAnswerButton.style.backgroundColor = "#ccc"; // Grey button by default
+        correctAnswerButton.style.color = "#666"; // Dark grey text by default
+    });
+</script>
+
+<script>
+    document.getElementById("correct-answer-container").addEventListener("change", function() {
+        let allSelected = true;
+        for (let i = 1; i <= mcqNumber; i++) {
+            const selected = document.querySelector(`input[name="correct-q${i}"]:checked`);
+            if (!selected) {
+                allSelected = false;
+                break;
+            }
+        }
+        document.getElementById("submit-correct-answers").disabled = !allSelected;
+        document.getElementById("warning-message").style.display = allSelected ? "none" : "block";
+    });
+</script>
+
+<script>
+    document.getElementById("submit-correct-answers").addEventListener("click", function() {
+        document.getElementById("correct-answer-section").style.display = "none";
+        document.getElementById("result-section").style.display = "block";
+
+        const resultContainer = document.getElementById("result-container");
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let skippedCount = 0;
+
+        for (let i = 1; i <= mcqNumber; i++) {
+            const userAnswer = document.querySelector(`input[name="q${i}"]:checked`);
+            const correctAnswer = document.querySelector(`input[name="correct-q${i}"]:checked`);
+            if (!userAnswer) {
+                skippedCount++;
+            } else if (userAnswer && correctAnswer) {
+                if (userAnswer.value === correctAnswer.value) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            }
+        }
+
+        const negativeMarking = 0.25;
+        const totalScore = correctCount - (incorrectCount * negativeMarking);
+
+        resultContainer.innerHTML = `
+            <div style="border: 2px solid #4CAF50; padding: 1rem; border-radius: 10px; background-color: #e7f7e7;">
+                <h3>Test Result</h3>
+                <p><strong>Total Questions:</strong> ${mcqNumber}</p>
+                <p><strong>Correct Answers:</strong> ${correctCount}</p>
+                <p><strong>Incorrect Answers:</strong> ${incorrectCount}</p>
+    <p><strong>Skipped Questions:</strong> ${skippedCount}</p>
+                <p><strong>Negative Marking:</strong> ${incorrectCount * negativeMarking}</p>
+                <p><strong>Total Score:</strong> ${totalScore.toFixed(2)}</p>
+
+<div style="border: 2px solid #ffa07a; margin-top: 10px; padding: 10px; border-radius: 10px; background-color: #ffe4e1;">
+    <p style="text-align: center; font-size: 1.2rem; font-weight: bold; color: #d35400;">
+        Percentage: ${(correctCount / mcqNumber * 100).toFixed(2)}%
+    </p>
+</div>
+
+            </div>
+        `;
+    });
+</script>
+
+<script>
+    // Add a restart button functionality
+    const restartButton = document.createElement("div");
+    restartButton.style = "text-align: center; margin-top: 1rem;";
+    restartButton.innerHTML = `
+        <button style="padding: 10px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 15px; cursor: pointer;">
+            Start Another Test
+        </button>
+    `;
+    document.getElementById("result-section").appendChild(restartButton);
+
+    restartButton.addEventListener("click", function() {
+        document.getElementById("result-section").style.display = "none";
+        document.getElementById("configuration-section").style.display = "block";
+        document.getElementById("test-form").reset();
+        document.getElementById("correct-answer-container").innerHTML = "";
+        document.getElementById("mcq-container").innerHTML = "";
+        document.getElementById("submit-correct-answers").disabled = true;
+    });
+</script>
+
+<script>
+    // Update the timer to auto-submit when time runs out
+    let timer;
+    document.getElementById("test-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Reset and initialize values
+        testName = document.getElementById("test-name").value;
+        mcqNumber = parseInt(document.getElementById("mcq-number").value);
+        timeLimit = parseInt(document.getElementById("time-limit").value);
+        negativeMarking = document.getElementById("negative-marking").checked;
+
+        document.getElementById("configuration-section").style.display = "none";
+        document.getElementById("test-section").style.display = "block";
+
+        const testDetails = document.getElementById("test-details");
+        testDetails.innerHTML = `
+            <h3>${testName}</h3>
+            <p>Total Questions: ${mcqNumber}</p>
+            <p>Time Limit: ${timeLimit} minutes</p>
+            <p>Negative Marking: ${negativeMarking ? "Enabled" : "Disabled"}</p>
+        `;
+
+        const timerDisplay = document.getElementById("timer");
+        let timeRemaining = timeLimit * 60;
+
+        timer = setInterval(() => {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerDisplay.textContent = `Time Remaining: ${minutes}m ${seconds}s`;
+            timeRemaining--;
+
+            if (timeRemaining < 0) {
+                clearInterval(timer);
+                timerDisplay.textContent = "Time's up!";
+                alert("Time's up! The test will be auto-submitted.");
+                autoSubmitTest();
+            }
+        }, 1000);
+
+        const mcqContainer = document.getElementById("mcq-container");
+        mcqContainer.innerHTML = "";
+        for (let i = 1; i <= mcqNumber; i++) {
+            const mcqDiv = document.createElement("div");
+            mcqDiv.innerHTML = `
+                <p>Q. ${i}:</p>
+                <input type="radio" name="q${i}" value="A">
+                <input type="radio" name="q${i}" value="B">
+                <input type="radio" name="q${i}" value="C">
+                <input type="radio" name="q${i}" value="D">
+            `;
+            mcqContainer.appendChild(mcqDiv);
+        }
+    });
+
+    function autoSubmitTest() {
+        // Hide test section and show correct answer section
+        document.getElementById("test-section").style.display = "none";
+        document.getElementById("correct-answer-section").style.display = "block";
+
+        // Generate correct answer selection fields
+        const correctAnswerContainer = document.getElementById("correct-answer-container");
+        correctAnswerContainer.innerHTML = "";
+        for (let i = 1; i <= mcqNumber; i++) {
+            const answerDiv = document.createElement("div");
+            answerDiv.innerHTML = `
+                <p>Correct Answer for Q. ${i}:</p>
+                <input type="radio" name="correct-q${i}" value="A">
+                <input type="radio" name="correct-q${i}" value="B">
+                <input type="radio" name="correct-q${i}" value="C">
+                <input type="radio" name="correct-q${i}" value="D">
+            `;
+            correctAnswerContainer.appendChild(answerDiv);
+        }
+    }
+
+    // Add submit button functionality
+    document.getElementById("submit-test").addEventListener("click", function() {
+        clearInterval(timer);
+        autoSubmitTest();
+    });
+</script>
+</body>
+</html>
